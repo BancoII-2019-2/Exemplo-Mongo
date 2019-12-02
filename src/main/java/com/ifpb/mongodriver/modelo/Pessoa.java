@@ -3,12 +3,16 @@ package com.ifpb.mongodriver.modelo;
 import org.bson.Document;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class Pessoa {
 
     private String cpf;
     private String nome;
     private LocalDate nascimento;
+
+    public Pessoa() {
+    }
 
     public Pessoa(String cpf, String nome, LocalDate nascimento) {
         this.cpf = cpf;
@@ -53,6 +57,15 @@ public class Pessoa {
         return new Document("cpf", cpf)
                 .append("nome", nome)
                 .append("nascimento", nascimento);
+    }
+
+    public Pessoa fromDocument(Document document){
+        cpf = document.getString("cpf");
+        nome = document.getString("nome");
+        nascimento = document.getDate("nascimento").toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return this;
     }
 
 }
